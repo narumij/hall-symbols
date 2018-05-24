@@ -2,7 +2,7 @@
 --
 -- 空間群のHall名から、対称操作を4x4の行列として生成します
 --
--- テストがまだ不十分です。
+--
 --
 module Crystallography.HallSymbols (
   fromHallSymbols,
