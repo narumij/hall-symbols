@@ -1,6 +1,6 @@
 -- | Symmetry Operators Generater of Hall Symbols
 --
--- Hallさんの空間群の簡約表記から、対称操作を4x4の行列として生成します
+-- 空間群のHall名から、対称操作を4x4の行列として生成します
 --
 -- テストがまだ不十分です。
 --
@@ -56,18 +56,7 @@ matrixSymbol = do
       return $ MatrixSymbol (isJust sign) (read [b]) (read . (: []) <$> s) d a t
 
 vectorSymbol :: CharParser () String
-vectorSymbol = do
-  t <- many (oneOf "abcnuvwd")
-  if isValidVectorSymbol t
-     then return t
-     else fail "unexpected vector symbol."
-
--- | ベクター記号が順不同になっていないかどうか
-isValidVectorSymbol :: String -> Bool
-isValidVectorSymbol = f . g
-  where
-    f a = a == sort a
-    g = mapMaybe (`elemIndex` "abcnuvwd")
+vectorSymbol = many (oneOf "abcnuvwd")
 
 originShift :: CharParser () OriginShift
 originShift = do
@@ -153,7 +142,7 @@ mapDA' _ _ [] = []
 mapDA' o p (x:xs) = da o p x : mapDA' (succ o) (nFoldBody x) xs
 
 -- | Default axes
--- 省略された軸情報復元の判定をします
+-- 省略された軸情報復元をします
 da :: Int -> NFold -> MatrixSymbol -> MatrixSymbol
 da 0 _ _ = error "order parameter must be >1."
 
@@ -203,7 +192,7 @@ generate mm = gn 0 mm mm
 -- このため、計算に供する行列はジェネレーターの組み合わせとして正しいかどうか配慮する必要がある。
 gn :: Int -> [Matrix Rational] -> [Matrix Rational] -> [Matrix Rational]
 gn n s m | length m == length mm = m
-         -- 計算が収束しなかった場合、強制終了する. 2018年段階で最大192個に対し、
+         -- 計算が収束しなかった場合、強制終了する.空間群の対称操作は最大192個なのに対し、
          -- 仮に全ての要素が∩2だった場合で、2^10=1024個まで可能な限度設定としている
          | n > 10 = error ""
          | otherwise = gn (succ n) s mm
