@@ -144,7 +144,7 @@ decodeSymbols = constructMatrices . restoreDefaultAxis
 
 -- パーズ済みの簡約記号データからseiz matrixを復元します
 constructMatrices :: (LatticeSymbol, [MatrixSymbol], OriginShift) -> [Matrix Rational]
--- TODO: 未知の入力に対する対策が不十分で、改良する必要がある
+-- TODO: パースの段階で生成不可能な内容ははじいているハズだが、念のために検証する
 constructMatrices (l,nat,v) = mapOriginShfit v $ lattice l ++ map matrix nat
 
 -- 簡約記号データの省略された軸情報を復元します
