@@ -211,8 +211,8 @@ generate mm = gn 0 mm mm
 -- このため、計算に供する行列はジェネレーターの組み合わせとして正しいかどうか配慮する必要がある。
 gn :: Int -> [Matrix Rational] -> [Matrix Rational] -> [Matrix Rational]
 gn n s m | length m == length mm = m
-         -- 計算が収束しなかった場合、空の配列を返し収束する.
-         -- 既存の空間具の提唱操作の生成が最大4回の繰り返しで足りるので、なんとなくで10回にしています
+         -- 計算が収束しなかった場合、空の配列を返し終了する.
+         -- 既存の空間群の対称操作の生成が最大4回の繰り返しで足りるので、なんとなくで10回にしています
          | n > 10 = []
          | otherwise = gn (succ n) s mm
   where
