@@ -305,7 +305,6 @@ matrix (MatrixSymbol False 6 (Just 1) Nothing (Just 'z') _) = setTransform matri
 matrix (MatrixSymbol False 6 (Just 2) Nothing (Just 'z') _) = setTransform matrix6z [0,0,2%6]
 matrix (MatrixSymbol False 6 (Just 4) Nothing (Just 'z') _) = setTransform matrix6z [0,0,4%6]
 matrix (MatrixSymbol False 6 (Just 5) Nothing (Just 'z') _) = setTransform matrix6z [0,0,5%6]
--- table (MatrixSymbol s n1 n2 n3 a t) = replaceTransform (table'' s n1 n3 a) (vector t)
 matrix (MatrixSymbol s n1 n2 n3 a t) = setTransform (ng33if s $ tbl345 n1 n3 a) (tv t)
 
 ng33if flag = if flag then ng33 else id
@@ -367,7 +366,7 @@ tbl345 a b            c         = error $ show (a,b,c)
 [refereces]
 
 1. Space-Group Notation with an Explicit Origin
-   [URL] S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
+   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
 2. Concise Space-Group Symbols
    [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
 
