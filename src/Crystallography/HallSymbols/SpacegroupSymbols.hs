@@ -1,3 +1,18 @@
+
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Crystallography.HallSymbols.SpacegroupSymbols
+-- Copyright   :  (c) Jun Narumi 2018
+-- License     :  BSD3 (see the LICENSE file)
+--
+-- Maintainer  :  narumij@gmail.com
+-- Stability   :  experimental
+-- Portability :  ?
+--
+-- Spacegroup Symbols
+--
+-----------------------------------------------------------------------------
+
 module Crystallography.HallSymbols.SpacegroupSymbols (
   spacegroupSymbols
   ) where
@@ -544,7 +559,7 @@ spacegroupSymbols = [
 
 [refereces]
 1. Concise Space-Group Symbols
-   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html#Table_3
+   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
 
 
 

@@ -369,7 +369,7 @@ tbl345 a b            c         = error $ show (a,b,c)
 1. Space-Group Notation with an Explicit Origin
    [URL] S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
 2. Concise Space-Group Symbols
-   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html#Table_3
+   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
 
 
 
