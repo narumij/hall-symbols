@@ -1,13 +1,23 @@
--- | Symmetry Operators Generater of Hall Symbols
+
+-----------------------------------------------------------------------------
+-- |
+-- Module      :  Crystallography.HallSymbols
+-- Copyright   :  (c) Jun Narumi 2018
+-- License     :  BSD3 (see the LICENSE file)
 --
--- 空間群のHall名から、対称操作を4x4の行列として生成します
+-- Maintainer  :  narumij@gmail.com
+-- Stability   :  experimental
+-- Portability :  ?
 --
+-- Hall Symbols
 --
---
+-----------------------------------------------------------------------------
+
 module Crystallography.HallSymbols (
   fromHallSymbols,
   fromHallSymbols',
   hallSymbols,
+  hallSymbols',
   ) where
 
 import Data.Maybe
@@ -18,6 +28,7 @@ import Data.Ratio
 import Data.Matrix hiding (identity,matrix,(<|>))
 import qualified Data.Matrix as M (identity)
 import Text.ParserCombinators.Parsec
+import Text.ParserCombinators.Parsec.Error
 
 type LatticeSymbol = (Bool,Char)
 
@@ -38,7 +49,7 @@ type OriginShift = (Integer,Integer,Integer)
 latticeSymbol :: CharParser () LatticeSymbol
 latticeSymbol = do
   sign <- optionMaybe (oneOf "-")
-  b <- oneOf "PABCIRF" -- TとSは除外
+  b <- oneOf "PABCIRF" -- TとSは除外している
   return (isJust sign,b)
 
 matrixSymbol :: CharParser () MatrixSymbol
@@ -84,8 +95,9 @@ integer = signed <|> unsigned
 space' :: CharParser () Char
 space' = oneOf " _"
 
-hallSymbols :: CharParser () ( LatticeSymbol, [MatrixSymbol], OriginShift )
-hallSymbols = do
+-- | 素のparser
+hallSymbols' :: CharParser () ( LatticeSymbol, [MatrixSymbol], OriginShift )
+hallSymbols' = do
   l   <- latticeSymbol
   nat <- many1 (try ms)
   v   <- option (0,0,0) os
@@ -98,50 +110,57 @@ hallSymbols = do
       space'
       originShift
 
+-- | 変換まで行うparser
+hallSymbols :: CharParser () [Matrix Rational]
+hallSymbols = do
+  raw <- hallSymbols'
+  -- Step 1: Decode space-group symbols
+  -- decodeSymbols関数で省略された軸情報を復元し、seiz matrixを生成します
+  -- Step 2: Generate symmetry operators
+  -- generate関数で得られたseiz matrixをgeneratorとして、一般点を生成します
+  let equivalentPositions = generate . decodeSymbols $ raw
+  -- generate関数が計算に失敗すると空の配列を返すので、その場合パースエラーとして処理します
+  if null equivalentPositions
+    then
+      fail "something happen when decode or generate process."
+    else
+      -- 正常に終了すると、一般座標の行列を返します。
+      return equivalentPositions
+
 -- | Generation of equivalent positions
--- HallSymbolsから一般座標を生成します
+-- HallSymbolsから一般座標を行列で生成します
 fromHallSymbols :: String -> Either ParseError [Matrix Rational]
-fromHallSymbols s = equivalentPositions
-  where
-    -- Step 1: Decode space-group symbols
-    m = decodeSymbols s
-    -- Step 2: Generate symmetry operators
-    -- 得られたseiz matrixをgeneratorとして、一般点を生成します
-    equivalentPositions = generate <$> m
+fromHallSymbols s = parse hallSymbols ("while reading " ++ show s) s
 
 -- | Generation of equivalent positions (unsafe version)
---
 fromHallSymbols' :: String -> [Matrix Rational]
 fromHallSymbols' s = case fromHallSymbols s of
   Left e -> error $ show e
   Right mm -> mm
 
--- | 簡約記号をパーズし、からseiz matrixを復元します
-decodeSymbols :: String -> Either ParseError [Matrix Rational]
-decodeSymbols s = constructMatrices . restoreDefaultAxis <$> parseHallSymbols s
+-- パーズした簡約記号からseiz matrixを復元します
+decodeSymbols :: ( LatticeSymbol, [MatrixSymbol], OriginShift ) -> [Matrix Rational]
+decodeSymbols = constructMatrices . restoreDefaultAxis
 
--- | パーズ済みの簡約記号データからseiz matrixを復元します
+-- パーズ済みの簡約記号データからseiz matrixを復元します
 constructMatrices :: (LatticeSymbol, [MatrixSymbol], OriginShift) -> [Matrix Rational]
-constructMatrices (l,nat,v) = mapOS v $ lattice l ++ map matrix nat
+-- TODO: 未知の入力に対する対策が不十分で、改良する必要がある
+constructMatrices (l,nat,v) = mapOriginShfit v $ lattice l ++ map matrix nat
 
--- | 簡約記号をパーズし、格子と対称芯のL、行列のNATx、Origin ShiftのVに変換します
-parseHallSymbols :: String -> Either ParseError (LatticeSymbol, [MatrixSymbol], OriginShift)
-parseHallSymbols s = parse hallSymbols ("while reading " ++ show s) s
-
--- | 簡約記号データの省略された軸情報を復元します
+-- 簡約記号データの省略された軸情報を復元します
 restoreDefaultAxis :: (LatticeSymbol, [MatrixSymbol], OriginShift) -> (LatticeSymbol, [MatrixSymbol], OriginShift)
 restoreDefaultAxis ( l, nat, v ) = ( l, mapDA nat, v )
 
--- | 軸情報復元を配列に適用します
+-- 軸情報復元を配列に適用します
 mapDA :: [MatrixSymbol] -> [MatrixSymbol]
 mapDA = mapDA' 1 0
 
--- | 軸情報復元を再帰的に行います
+-- 軸情報復元を再帰的に行います
 mapDA' :: Int -> NFold -> [MatrixSymbol] -> [MatrixSymbol]
 mapDA' _ _ [] = []
 mapDA' o p (x:xs) = da o p x : mapDA' (succ o) (nFoldBody x) xs
 
--- | Default axes
+-- Default axes
 -- 省略された軸情報復元をします
 da :: Int -> NFold -> MatrixSymbol -> MatrixSymbol
 da 0 _ _ = error "order parameter must be >1."
@@ -176,14 +195,14 @@ da order preceded (MatrixSymbol s n1 n2 n3 Nothing v)
 da order preceded (matrixSymbol@(MatrixSymbol _ n1 _ _ _ _))
   = matrixSymbol
 
--- | 一般点の生成
+-- 一般点の生成
 generate :: [Matrix Rational] -> [Matrix Rational]
 generate mm = gn 0 mm mm
 
-
--- | 一般点生成の実行部
+-- 一般点生成の実行部
+--
 -- 一般点（equivalent positions）は、その名の通り掛け合わせても、
--- 等価な位置のどこかにしかならない性質があるようで、
+-- 等価な位置のどこかにしかならない性質があるようで（対称性ゆえ？）、
 -- ジェネレーターとして選ばれた行列を掛け合わせて続けても、
 -- この性質をもつ組み合わせであれば、ある一定数以上、要素数が増えない.
 -- 繰り返し掛け合わせていき、要素数が増えなくなった段階で得られる行列のセットが一般点である。
@@ -192,22 +211,22 @@ generate mm = gn 0 mm mm
 -- このため、計算に供する行列はジェネレーターの組み合わせとして正しいかどうか配慮する必要がある。
 gn :: Int -> [Matrix Rational] -> [Matrix Rational] -> [Matrix Rational]
 gn n s m | length m == length mm = m
-         -- 計算が収束しなかった場合、強制終了する.空間群の対称操作は最大192個なのに対し、
-         -- 仮に全ての要素が∩2だった場合で、2^10=1024個まで可能な限度設定としている
-         | n > 10 = error ""
+         -- 計算が収束しなかった場合、空の配列を返し収束する.
+         -- 既存の空間具の提唱操作の生成が最大4回の繰り返しで足りるので、なんとなくで10回にしています
+         | n > 10 = []
          | otherwise = gn (succ n) s mm
   where
     mm = nub . map (modulus1 . foldl1 multStd) . sequenceA $ [s,m]
 
--- | 行列の平行移動部分を配列で与えたベクトルで置き換える
+-- 行列の平行移動部分を配列で与えたベクトルで置き換える
 setTransform :: Matrix Rational -> [Rational] -> Matrix Rational
 setTransform m l = let t = fromList 3 1 l
                        (a,b,c,d) = splitBlocks 3 3 m
                    in joinBlocks (a,t,c,d)
 
--- | 対称操作の原点を移動する操作を行列のセット全体に適用する
-mapOS :: (Integer,Integer,Integer) -> [Matrix Rational] -> [Matrix Rational]
-mapOS (va,vb,vc) = map (sn va vb vc)
+-- 対称操作の原点を移動する操作を行列のセット全体に適用する
+mapOriginShfit :: (Integer,Integer,Integer) -> [Matrix Rational] -> [Matrix Rational]
+mapOriginShfit (va,vb,vc) = map (sn va vb vc)
   where
     sn 0 0 0 m = m
     sn va vb vc m = let v = [ va % 12, vb % 12, vc % 12 ]
@@ -215,33 +234,33 @@ mapOS (va,vb,vc) = map (sn va vb vc)
                         o = setTransform identity (fmap negate v)
                     in modulus1 $ foldl1 multStd [n,m,o]
 
--- | 行列の平行移動部分の各要素が [0,1)に収まるようにする
+-- 行列の平行移動部分の各要素が [0,1)に収まるようにする
 modulus1 :: Real a => Matrix a -> Matrix a
 modulus1 m = let (a,b,c,d) = splitBlocks 3 3 m
              in joinBlocks (a,fmap (`mod'` 1) b,c,d)
 
--- | 行列の回転部分の各要素を符号反転する
+-- 行列の回転部分の各要素を符号反転する
 ng33 :: Matrix Rational -> Matrix Rational
 ng33 m = let (a,b,c,d) = splitBlocks 3 3 m
              in joinBlocks (negate a,b,c,d)
 
--- | 恒等操作
+-- 恒等操作
 identity :: Matrix Rational
 identity = M.identity 4
 
--- | 行列セットに、その回転部分の符号反転したものを付与する
+-- 行列セットに、その回転部分の符号反転したものを付与する
 mapNg33 :: [Matrix Rational] -> [Matrix Rational]
 mapNg33 l = nub [ g m | g <- [ id, ng33 ], m <- l ]
 
--- | 対称芯
+-- 対称芯
 centroSymmetric :: [Matrix Rational] -> [Matrix Rational]
 centroSymmetric = mapNg33
 
--- | 副格子に基づいた操作
+-- 副格子に基づいた操作
 set :: [[Rational]] -> [Matrix Rational]
 set = map (setTransform identity)
 
--- | Table 1. Lattice Symbol T
+-- Table 1. Lattice Symbol T
 -- 副格子の行列を生成する
 lattice :: LatticeSymbol -> [Matrix Rational]
 lattice (False, l) =                  tbl1 l
@@ -257,13 +276,13 @@ tbl1 'R' = set [[ 0, 0, 0 ], [ 1%3, 2%3, 2%3 ], [ 2%3, 1%3, 1%3 ]]
 tbl1 'F' = set [[ 0, 0, 0 ], [   0, 1%2, 1%2 ], [ 1%2,   0, 1%2 ], [ 1%2, 1%2,  0 ]]
 tbl1  c  = error $ show c
 
--- | translation vector
+-- translation vector
 -- 複数のT記号を合算したベクトル
 tv :: String -> [Rational]
 tv ch | null ch        = [0,0,0]
       | otherwise      = fmap (`mod'` 1) $ foldl1 (zipWith (+)) $ map tbl2 ch
 
--- | Table 2. Translation symbol T
+-- Table 2. Translation symbol T
 tbl2 :: Char -> [Rational]
 tbl2 'a' = [ 1%2,   0,   0 ]
 tbl2 'b' = [   0, 1%2,   0 ]
@@ -275,7 +294,7 @@ tbl2 'w' = [   0,   0, 1%4 ]
 tbl2 'd' = [ 1%4, 1%4, 1%4 ]
 tbl2  c  = error $ show c
 
--- | seiz matrix
+-- seiz matrix
 -- generaterとなるmatrix
 matrix :: MatrixSymbol -> Matrix Rational
 matrix (MatrixSymbol False 3 (Just 1) Nothing (Just 'z') _) = setTransform matrix3z [0,0,1%3]
@@ -295,7 +314,7 @@ matrix3z = tbl345 3 Nothing (Just 'z')
 matrix4z = tbl345 4 Nothing (Just 'z')
 matrix6z = tbl345 6 Nothing (Just 'z')
 
--- | Rotation Table
+-- Rotation Table
 -- Table 3. Rotation symbol N Aforprincipal axes
 -- Table 4. Rotation symbol N a for face-diagonal axes
 -- Table 5. Rotation matrix for the body-diagonal axis
