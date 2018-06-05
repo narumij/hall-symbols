@@ -11,10 +11,14 @@ Spacegroup Symbols
 
 [refereces]
 
-1. Space-Group Notation with an Explicit Origin
-   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
-2. Concise Space-Group Symbols
+1. Concise Space-Group Symbols
+
    [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
+
+
+2. Space-Group Notation with an Explicit Origin
+
+   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
 
 -}
 module Crystallography.HallSymbols.SpacegroupSymbols (
@@ -562,20 +566,3 @@ spacegroupSymbols = [
   (  "229",  "I m -3 m",  "-I 4 2 3"  ),
   (  "230",  "I a -3 d",  "-I 4bd 2c 3"  )
   ]
-
-{--
-
-
-
-
-
-[refereces]
-1. Concise Space-Group Symbols
-   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
-
-
-
-
-
-
---}

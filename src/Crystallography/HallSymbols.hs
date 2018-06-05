@@ -11,10 +11,15 @@ Symmetry operations generater of Hall Symbols
 
 [refereces]
 
-1. Space-Group Notation with an Explicit Origin
-   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
-2. Concise Space-Group Symbols
+1. Concise Space-Group Symbols
+
    [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
+
+
+2. Space-Group Notation with an Explicit Origin
+
+   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
+
 
 -}
 
@@ -372,11 +377,3 @@ tbl345 2 (Just '"')  (Just 'z') = fromLists [[ 0, 1, 0, 0], [ 1, 0, 0, 0], [ 0, 
 tbl345 3 (Just '*')   _         = fromLists [[ 0, 0, 1, 0], [ 1, 0, 0, 0], [ 0, 1, 0, 0], [ 0, 0, 0, 1]]
 -- error
 tbl345 a b            c         = error $ show (a,b,c)
-
-{--
-
-
-
-
-
---}
