@@ -9,20 +9,17 @@ Portability :  ?
 
 Symmetry operations generater of Hall Symbols
 
-[refereces]
+[Refereces]
 
 1. Concise Space-Group Symbols
-
-   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
+   (URL: http://cci.lbl.gov/sginfo/hall_symbols.html )
 
 
 2. Space-Group Notation with an Explicit Origin
-
    S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
 
 
 -}
-
 module Crystallography.HallSymbols (
   fromHallSymbols,
   fromHallSymbols',
