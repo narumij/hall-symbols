@@ -1,17 +1,22 @@
+{- |
+Module      :  Crystallography.HallSymbols
+Copyright   :  (c) Jun Narumi 2018
+License     :  BSD3 (see the LICENSE file)
 
------------------------------------------------------------------------------
--- |
--- Module      :  Crystallography.HallSymbols
--- Copyright   :  (c) Jun Narumi 2018
--- License     :  BSD3 (see the LICENSE file)
---
--- Maintainer  :  narumij@gmail.com
--- Stability   :  experimental
--- Portability :  ?
---
--- Hall Symbols
---
------------------------------------------------------------------------------
+Maintainer  :  narumij@gmail.com
+Stability   :  experimental
+Portability :  ?
+
+Symmetry operations generater of Hall Symbols
+
+[refereces]
+
+1. Space-Group Notation with an Explicit Origin
+   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
+2. Concise Space-Group Symbols
+   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
+
+-}
 
 module Crystallography.HallSymbols (
   fromHallSymbols,
@@ -95,7 +100,7 @@ integer = signed <|> unsigned
 space' :: CharParser () Char
 space' = oneOf " _"
 
--- | 素のparser
+-- | Primitive parser
 hallSymbols' :: CharParser () ( LatticeSymbol, [MatrixSymbol], OriginShift )
 hallSymbols' = do
   l   <- latticeSymbol
@@ -110,7 +115,7 @@ hallSymbols' = do
       space'
       originShift
 
--- | 変換まで行うparser
+-- | Parser with convert
 hallSymbols :: CharParser () [Matrix Rational]
 hallSymbols = do
   raw <- hallSymbols'
@@ -128,7 +133,7 @@ hallSymbols = do
       return equivalentPositions
 
 -- | Generation of equivalent positions
--- HallSymbolsから一般座標を行列で生成します
+-- Generate general equivalent positions by 4x4 matrix
 fromHallSymbols :: String -> Either ParseError [Matrix Rational]
 fromHallSymbols s = parse hallSymbols ("while reading " ++ show s) s
 
@@ -363,12 +368,6 @@ tbl345 a b            c         = error $ show (a,b,c)
 {--
 
 
-[refereces]
-
-1. Space-Group Notation with an Explicit Origin
-   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
-2. Concise Space-Group Symbols
-   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
 
 
 

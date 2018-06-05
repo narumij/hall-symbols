@@ -1,23 +1,35 @@
+{- |
+Module      :  Crystallography.HallSymbols.SpacegroupSymbols
+Copyright   :  (c) Jun Narumi 2018
+License     :  BSD3 (see the LICENSE file)
 
------------------------------------------------------------------------------
--- |
--- Module      :  Crystallography.HallSymbols.SpacegroupSymbols
--- Copyright   :  (c) Jun Narumi 2018
--- License     :  BSD3 (see the LICENSE file)
---
--- Maintainer  :  narumij@gmail.com
--- Stability   :  experimental
--- Portability :  ?
---
--- Spacegroup Symbols
---
------------------------------------------------------------------------------
+Maintainer  :  narumij@gmail.com
+Stability   :  experimental
+Portability :  ?
 
+Spacegroup Symbols
+
+[refereces]
+
+1. Space-Group Notation with an Explicit Origin
+   S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
+2. Concise Space-Group Symbols
+   [URL] http://cci.lbl.gov/sginfo/hall_symbols.html
+
+-}
 module Crystallography.HallSymbols.SpacegroupSymbols (
-  spacegroupSymbols
+  spacegroupSymbols,
+  ITNumber,
+  HMFull,
+  HallName
   ) where
 
+type ITNumber = String
+type HMFull = String
+type HallName = String
+
 -- | Table 6. Concise space-group symbols
+spacegroupSymbols :: [(ITNumber,HMFull,HallName)]
 spacegroupSymbols = [
   (  "1",  "P 1",  "P 1"  ),
   (  "2",  "P -1",  "-P 1"  ),
