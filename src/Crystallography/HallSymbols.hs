@@ -23,6 +23,9 @@ module Crystallography.HallSymbols (
   fromHallSymbols',
   hallSymbols,
   hallSymbols',
+  LatticeSymbol,
+  MatrixSymbol,
+  OriginShift,
   ) where
 
 import Data.Maybe
@@ -35,10 +38,14 @@ import qualified Data.Matrix as M (identity)
 import Text.ParserCombinators.Parsec
 import Text.ParserCombinators.Parsec.Error
 
+-- | Lattice symbol e.g. P -P I -I R A B C F
+--
+-- not suport T and S
 type LatticeSymbol = (Bool,Char)
 
 type NFold = Int
 
+-- | Matrix symbol e.g. 2 2xa 3 41 65
 data MatrixSymbol
   = MatrixSymbol {
     minusSign :: Bool, -- -
@@ -49,6 +56,7 @@ data MatrixSymbol
     translationVector :: String -- abcnuvwd
   } deriving Show
 
+-- | Origin shift e.g. (0 0 1)
 type OriginShift = (Integer,Integer,Integer)
 
 latticeSymbol :: CharParser () LatticeSymbol
