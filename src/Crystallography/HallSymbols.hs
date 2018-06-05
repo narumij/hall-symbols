@@ -9,15 +9,14 @@ Portability :  ?
 
 Symmetry operations generater of Hall Symbols
 
-[Refereces]
+[References]
 
-1. Concise Space-Group Symbols
-   (URL: http://cci.lbl.gov/sginfo/hall_symbols.html )
-
+1. Concise Space-Group Symbols http://cci.lbl.gov/sginfo/hall_symbols.html , See also : https://github.com/rwgk/sginfo
 
 2. Space-Group Notation with an Explicit Origin
    S.R. Hall; Space-Group Notation with an Explicit Origin ; Acta Cryst. (1981). A37, 517-525
 
+3. ITVB 2001 Table A1.4.2.7 Hall symbols http://cci.lbl.gov/sginfo/itvb_2001_table_a1427_hall_symbols.html
 
 -}
 module Crystallography.HallSymbols (
@@ -142,12 +141,11 @@ hallSymbols = do
       -- 正常に終了すると、一般座標の行列を返します。
       return equivalentPositions
 
--- | Generation of equivalent positions
--- Generate general equivalent positions by 4x4 matrix
+-- | Generate general equivalent positions by 4x4 matrix
 fromHallSymbols :: String -> Either ParseError [Matrix Rational]
 fromHallSymbols s = parse hallSymbols ("while reading " ++ show s) s
 
--- | Generation of equivalent positions (unsafe version)
+-- | Generate general equivalent positions by 4x4 matrix (unsafe version)
 fromHallSymbols' :: String -> [Matrix Rational]
 fromHallSymbols' s = case fromHallSymbols s of
   Left e -> error $ show e

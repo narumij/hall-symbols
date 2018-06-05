@@ -9,10 +9,11 @@ Portability :  ?
 
 Spacegroup Symbols
 
-[Referece]
+[References]
 
-Concise Space-Group Symbols
-   (URL: http://cci.lbl.gov/sginfo/hall_symbols.html )
+1. Concise Space-Group Symbols http://cci.lbl.gov/sginfo/hall_symbols.html , See also : https://github.com/rwgk/sginfo
+
+2. ITVB 2001 Table A1.4.2.7 Hall symbols http://cci.lbl.gov/sginfo/itvb_2001_table_a1427_hall_symbols.html
 
 -}
 module Crystallography.HallSymbols.SpacegroupSymbols (
@@ -27,6 +28,8 @@ type HMFull = String
 type HallName = String
 
 -- | Table 6. Concise space-group symbols
+--
+-- (+ cf. IT Vol. A 1983 Table 4.3.1
 spacegroupSymbols :: [(NumberAndChoice,HMFull,HallName)]
 spacegroupSymbols = [
   (  "1",  "P 1",  "P 1"  ),
