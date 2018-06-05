@@ -15,10 +15,26 @@ sort' xs = sort . map toList $ xs
 
 spec :: Spec
 spec = do
+
+  describe "sort'" $ do
+
+    it "empty list is not equivalent with a 0 matrix." $ do
+      sort' [] `shouldNotBe` (sort' [zero 4 4])
+
+    it "a 1 matrix is not equivalent with a 0 matrix." $ do
+      sort' [identity 4] `shouldNotBe` (sort' [zero 4 4])
+
+    it "0 and 1 matrices is not equivalent with a 0 matrix." $ do
+      sort' [zero 4 4,identity 4] `shouldNotBe` (sort' [zero 4 4])
+
+    it "0 and 1 matrices is equivalent with 1 and 0 matrix." $ do
+      sort' [zero 4 4,identity 4] `shouldBe` (sort' [identity 4,zero 4 4])
+
   describe "Crystallography.HallSymbols.hallSymbols" $ do
     return ()
 
   describe "Crystallography.HallSymbols.fromHallSymbols" $ do
+
     it "[jpn] P 1 wo parse suru to identity ni naru" $ do
       fromHallSymbols "P 1" `shouldBe` (Right [identity 4])
 
