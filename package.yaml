@@ -40,3 +40,4 @@ tests:
     - hall-symbols
     - hspec
     - QuickCheck
+    - matrix-as-xyz
