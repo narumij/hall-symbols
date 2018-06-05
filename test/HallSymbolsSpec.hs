@@ -1,8 +1,7 @@
 module HallSymbolsSpec where
 
 import Test.Hspec
--- import Test.Hspec.QuickCheck
--- import Test.QuickCheck hiding ((.&.))
+
 import Control.Exception (evaluate)
 import Text.ParserCombinators.Parsec
 import Crystallography.HallSymbols
