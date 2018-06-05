@@ -11,7 +11,7 @@ extra-source-files:
 - ChangeLog.md
 
 # Metadata used when publishing your package
-# synopsis:            Short description of your package
+synopsis:            Symmetry operations generater of Hall Symbols
 category:            Chemistry
 
 # To avoid duplicated efforts in documentation and dealing with the
