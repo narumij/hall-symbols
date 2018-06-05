@@ -28,8 +28,6 @@ type HMFull = String
 type HallName = String
 
 -- | Table 6. Concise space-group symbols
---
--- (+ cf. IT Vol. A 1983 Table 4.3.1
 spacegroupSymbols :: [(NumberAndChoice,HMFull,HallName)]
 spacegroupSymbols = [
   (  "1",  "P 1",  "P 1"  ),
