@@ -171,7 +171,7 @@ spacegroupSymbols = [
   (  "28:cab",  "P 2 m b",  "P -2b 2"  ),
   (  "28:-cba",  "P 2 c m",  "P -2c 2"  ),
   (  "28:bca",  "P c 2 m",  "P -2c -2c"  ),
-  (  "28:a-c",  "b   P m 2 a",  "P -2a -2a"  ),
+  (  "28:a-cb",  "P m 2 a",  "P -2a -2a"  ),
   (  "29",  "P c a 21",  "P 2c -2ac"  ),
   (  "29:ba-c",  "P b c 21",  "P 2c -2b"  ),
   (  "29:cab",  "P 21 a b",  "P -2b 2a"  ),
