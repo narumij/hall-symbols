@@ -124,15 +124,21 @@ hallSymbols' = do
       space'
       originShift
 
--- | Parser with convert
+-- | Parse and make Generators.
+generators :: CharParser () [Matrix Rational]
+generators = do
+  raw <- hallSymbols'
+  return $ decodeSymbols raw
+
+-- | Parse and make General Positions.
 hallSymbols :: CharParser () [Matrix Rational]
 hallSymbols = do
-  raw <- hallSymbols'
+  g <- generators
   -- Step 1: Decode space-group symbols
   -- decodeSymbols関数で省略された軸情報を復元し、seiz matrixを生成します
   -- Step 2: Generate symmetry operators
   -- generate関数で得られたseiz matrixをgeneratorとして、一般点を生成します
-  let equivalentPositions = generate . decodeSymbols $ raw
+  let equivalentPositions = generate g
   -- generate関数が計算に失敗すると空の配列を返すので、その場合パースエラーとして処理します
   if null equivalentPositions
     then
@@ -151,7 +157,15 @@ fromHallSymbols' s = case fromHallSymbols s of
   Left e -> error $ show e
   Right mm -> mm
 
--- パーズした簡約記号からseiz matrixを復元します
+-- | Generate Generators by 4x4 matrix (unsafe version)
+fromHallSymbols'' :: String -> [Matrix Rational]
+fromHallSymbols'' s = case gg s of
+  Left e -> error $ show e
+  Right mm -> mm
+  where
+    gg s = parse generators ("while reading " ++ show s) s
+
+-- パースした簡約記号からseiz matrixを復元します
 decodeSymbols :: ( LatticeSymbol, [MatrixSymbol], OriginShift ) -> [Matrix Rational]
 decodeSymbols = constructMatrices . restoreDefaultAxis
 
@@ -223,7 +237,7 @@ generate mm = gn 0 mm mm
 -- 注意点として、恒等操作が二つあるなどしただけで、計算結果が変化するようである。
 -- このため、計算に供する行列はジェネレーターの組み合わせとして正しいかどうか配慮する必要がある。
 gn :: Int -> [Matrix Rational] -> [Matrix Rational] -> [Matrix Rational]
-gn n s m | length m == length mm = m
+gn n s m | length (nub m) == length mm = mm
          -- 計算が収束しなかった場合、空の配列を返し終了する.
          -- 既存の空間群の対称操作の生成が最大4回の繰り返しで足りるので、なんとなくで10回にしています
          | n > 10 = []
