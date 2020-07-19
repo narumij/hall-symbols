@@ -29,5 +29,5 @@ Prelude> fmap prettyXYZ $ fromHallSymbols'' "C -2yc"
 
 ## License
 
-See the [LICENSE](https://github.com/narumij/hall-symbols/LICENSE)
+See the [LICENSE](LICENSE)
 file in the repository.
