@@ -4,8 +4,11 @@ Haskell Hall Symbols Library
 
 # Quickstart
 
+```shell
 shell> stack repl
+```
 
+```haskell
 -- prepare
 Prelude> :set -package matrix-as-xyz
 Prelude> :m Data.Matrix.AsXYZ
@@ -20,6 +23,7 @@ Prelude> fmap prettyXYZ $ fromHallSymbols' "C -2yc"
 Prelude> fmap prettyXYZ $ fromHallSymbols'' "C -2yc"
 
 ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2"]
+```
 
 
 
