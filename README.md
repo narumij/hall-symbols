@@ -17,7 +17,7 @@ Edit extra-deps part of stack.yaml like below.
 extra-deps:
 - matrix-as-xyz-0.1.1.1
 - symmetry-operations-symbols-0.0.1.2
-- hall-symbols-0.1.0.5
+- hall-symbols-0.1.0.4
 ```
 
 Build project.
