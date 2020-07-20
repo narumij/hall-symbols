@@ -267,7 +267,7 @@ gn n s m | length (nub m) == length mm = mm
          -- 計算が収束しなかった場合、空の配列を返し終了する.
          -- 既存の空間群の対称操作の生成が最大4回の繰り返しで足りるので、なんとなくで10回にしています
          | n > 10 = []
-         | otherwise = gn (succ n) s mm
+         | otherwise = gn (succ n) (nub s) mm
   where
     mm = nub . map (modulus1 . foldl1 multStd) . sequenceA $ [s,m]
 
