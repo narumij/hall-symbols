@@ -7,8 +7,8 @@ Haskell Hall Symbols Library
 Make new stack project and move to project directory.
 
 ```shell
-% stack new hall_symbols_repl
-% cd hall_symbols_repl
+% stack new hmRepl
+% cd hmRepl
 ```
 
 Edit extra-deps part of stack.yaml like below.
@@ -16,8 +16,14 @@ Edit extra-deps part of stack.yaml like below.
 ```
 extra-deps:
 - matrix-as-xyz-0.1.1.1
+- symmetry-operations-symbols-0.0.1.3
 - hall-symbols-0.1.0.4
-- symmetry-operations-symbols-0.0.1.0
+```
+
+Build project.
+
+```shell
+% stack build
 ```
 
 Then start repl.
@@ -29,8 +35,9 @@ Then start repl.
 Setup packages and load modules.
 
 ```haskell
-repl> :set -package hall-symbols
 repl> :set -package matrix-as-xyz
+repl> :set -package symmetry-operations-symbols
+repl> :set -package hall-symbols
 repl> :m Data.Matrix.AsXYZ Data.Matrix.SymmetryOperationsSymbols Crystallography.HallSymbols
 ```
 
@@ -41,20 +48,18 @@ Use like below.
 repl> prettyXYZ <$> fromHallSymbols' "C -2yc"
  ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2","x+1/2,-y+1/2,z+1/2"]
 
--- print Generators
-repl> prettyXYZ <$> fromHallSymbols'' "C -2yc"
-["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2"]
+repl> fromHallSymbols' "C -2yc" >>= fromMatrix'
+[" 1 "," c  x,0,z"," t (1/2,1/2,0) "," n (1/2,0,1/2) x,1/4,z"]
 
 ```
 
 ```haskell
--- print General Positions.
-repl> fromMatrix' <$> fromHallSymbols' "C -2yc"
- []
-
 -- print Generators
-repl> fromMatrix' <$> fromHallSymbols'' "C -2yc"
-[]
+repl> prettyXYZ <$> generatorsOfHallSymbols "C -2yc"
+["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2"]
+
+repl> generatorsOfHallSymbols "C -2yc" >>= fromMatrix'
+[" 1 "," t (1/2,1/2,0) "," c  x,0,z"]
 
 ```
 
