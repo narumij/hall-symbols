@@ -4,25 +4,41 @@ Haskell Hall Symbols Library
 
 ## Quickstart
 
+Make new stack project.
+
+```shell
+% stack new hall_symbols_repl
+% cd hall_symbols_repl
+```
+
+Edit extra-deps part of hall_symbols_repl/stack.yaml like below.
+
+```
+extra-deps:
+- matrix-as-xyz-0.1.1.1
+- hall-symbols-0.1.0.4
+```
+
+Start repl.
+
 ```shell
 % stack repl
 ```
 
 ```haskell
 -- prepare
+repl> :set -package hall-symbols
 repl> :set -package matrix-as-xyz
-repl> :m Data.Matrix.AsXYZ
-repl> :l Crystallography.HallSymbols
+repl> :m Data.Matrix.AsXYZ Crystallography.HallSymbols
+```
 
--- print general positions
+```haskell
 repl> prettyXYZ <$> fromHallSymbols' "C -2yc"
-
  ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2","x+1/2,-y+1/2,z+1/2"]
 
--- print generators
 repl> prettyXYZ <$> fromHallSymbols'' "C -2yc"
-
 ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2"]
+
 ```
 
 ## References
