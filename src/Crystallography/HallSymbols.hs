@@ -22,9 +22,11 @@ Symmetry operations generater of Hall Symbols
 module Crystallography.HallSymbols (
   fromHallSymbols,
   fromHallSymbols',
+  generatorsOfHallSymbols,
   hallSymbols,
 --  hallSymbols',
   parser,
+  generators,
   LatticeSymbol,
   MatrixSymbol,
   OriginShift,
@@ -179,8 +181,8 @@ fromHallSymbols' s = case fromHallSymbols s of
   Right mm -> mm
 
 -- | Generate Generators by 4x4 matrix (unsafe version)
-fromHallSymbols'' :: String -> [Matrix Rational]
-fromHallSymbols'' s = case gg s of
+generatorsOfHallSymbols :: String -> [Matrix Rational]
+generatorsOfHallSymbols s = case gg s of
   Left e -> error $ show e
   Right mm -> mm
   where
