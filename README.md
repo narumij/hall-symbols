@@ -37,18 +37,22 @@ repl> :m Data.Matrix.AsXYZ Data.Matrix.SymmetryOperationsSymbols Crystallography
 Use like below.
 
 ```haskell
+-- print General Positions.
 repl> prettyXYZ <$> fromHallSymbols' "C -2yc"
  ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2","x+1/2,-y+1/2,z+1/2"]
 
+-- print Generators
 repl> prettyXYZ <$> fromHallSymbols'' "C -2yc"
 ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2"]
 
 ```
 
 ```haskell
+-- print General Positions.
 repl> fromMatrix' <$> fromHallSymbols' "C -2yc"
  []
 
+-- print Generators
 repl> fromMatrix' <$> fromHallSymbols'' "C -2yc"
 []
 
