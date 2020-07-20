@@ -17,6 +17,7 @@ Edit extra-deps part of stack.yaml like below.
 extra-deps:
 - matrix-as-xyz-0.1.1.1
 - hall-symbols-0.1.0.4
+- symmetry-operations-symbols-0.0.1.0
 ```
 
 Then start repl.
@@ -30,7 +31,7 @@ Setup packages and load modules.
 ```haskell
 repl> :set -package hall-symbols
 repl> :set -package matrix-as-xyz
-repl> :m Data.Matrix.AsXYZ Crystallography.HallSymbols
+repl> :m Data.Matrix.AsXYZ Data.Matrix.SymmetryOperationsSymbols Crystallography.HallSymbols
 ```
 
 Use like below.
@@ -41,6 +42,15 @@ repl> prettyXYZ <$> fromHallSymbols' "C -2yc"
 
 repl> prettyXYZ <$> fromHallSymbols'' "C -2yc"
 ["x,y,z","x+1/2,y+1/2,z","x,-y,z+1/2"]
+
+```
+
+```haskell
+repl> fromMatrix' <$> fromHallSymbols' "C -2yc"
+ []
+
+repl> fromMatrix' <$> fromHallSymbols'' "C -2yc"
+[]
 
 ```
 
