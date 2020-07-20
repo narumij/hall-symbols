@@ -4,14 +4,14 @@ Haskell Hall Symbols Library
 
 ## Quickstart
 
-Make new stack project.
+Make new stack project and move to project directory.
 
 ```shell
 % stack new hall_symbols_repl
 % cd hall_symbols_repl
 ```
 
-Edit extra-deps part of hall_symbols_repl/stack.yaml like below.
+Edit extra-deps part of stack.yaml like below.
 
 ```
 extra-deps:
@@ -19,18 +19,21 @@ extra-deps:
 - hall-symbols-0.1.0.4
 ```
 
-Start repl.
+Then start repl.
 
 ```shell
 % stack repl
 ```
 
+Setup packages and load modules
+
 ```haskell
--- prepare
 repl> :set -package hall-symbols
 repl> :set -package matrix-as-xyz
 repl> :m Data.Matrix.AsXYZ Crystallography.HallSymbols
 ```
+
+Use like below.
 
 ```haskell
 repl> prettyXYZ <$> fromHallSymbols' "C -2yc"
