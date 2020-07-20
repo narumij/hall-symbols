@@ -25,7 +25,7 @@ Then start repl.
 % stack repl
 ```
 
-Setup packages and load modules
+Setup packages and load modules.
 
 ```haskell
 repl> :set -package hall-symbols
