@@ -23,7 +23,8 @@ module Crystallography.HallSymbols (
   fromHallSymbols,
   fromHallSymbols',
   hallSymbols,
-  hallSymbols',
+--  hallSymbols',
+  parser,
   LatticeSymbol,
   MatrixSymbol,
   OriginShift,
@@ -110,8 +111,8 @@ space' :: CharParser () Char
 space' = oneOf " _"
 
 -- | Primitive parser
-hallSymbols' :: CharParser () ( LatticeSymbol, [MatrixSymbol], OriginShift )
-hallSymbols' = do
+parser :: CharParser () ( LatticeSymbol, [MatrixSymbol], OriginShift )
+parser = do
   l   <- latticeSymbol
   nat <- many1 (try ms)
   v   <- option (0,0,0) os
@@ -124,15 +125,21 @@ hallSymbols' = do
       space'
       originShift
 
--- | Parser with convert
+-- | Parse and make Generators.
+generators :: CharParser () [Matrix Rational]
+generators = do
+  raw <- parser
+  return $ decodeSymbols raw
+
+-- | Parse and make General Positions.
 hallSymbols :: CharParser () [Matrix Rational]
 hallSymbols = do
-  raw <- hallSymbols'
+  g <- generators
   -- Step 1: Decode space-group symbols
   -- decodeSymbols関数で省略された軸情報を復元し、seiz matrixを生成します
   -- Step 2: Generate symmetry operators
   -- generate関数で得られたseiz matrixをgeneratorとして、一般点を生成します
-  let equivalentPositions = generate . decodeSymbols $ raw
+  let equivalentPositions = generate g
   -- generate関数が計算に失敗すると空の配列を返すので、その場合パースエラーとして処理します
   if null equivalentPositions
     then
@@ -141,9 +148,29 @@ hallSymbols = do
       -- 正常に終了すると、一般座標の行列を返します。
       return equivalentPositions
 
+-- | Parse and make General Positions.
+generateLikeITC :: CharParser () [Matrix Rational]
+generateLikeITC = do
+  raw <- parser
+  let equivalentPositions = likeITC raw
+  if null equivalentPositions
+    then
+      fail "something happen when decode or generate process."
+    else
+      -- 正常に終了すると、一般座標の行列を返します。
+      return equivalentPositions
+
+likeITC :: ( LatticeSymbol, [MatrixSymbol], OriginShift ) -> [Matrix Rational]
+likeITC raw = if null h then [] else r            
+  where
+    constructMatrices' (l,nat,v) = fmap (mapOriginShfit v) [lattice l, map matrix nat]
+    [a,b] = constructMatrices' . restoreDefaultAxis $ raw
+    h = generate $ [identity] ++ b
+    r = generate $ h ++ a
+
 -- | Generate general equivalent positions by 4x4 matrix
 fromHallSymbols :: String -> Either ParseError [Matrix Rational]
-fromHallSymbols s = parse hallSymbols ("while reading " ++ show s) s
+fromHallSymbols s = parse generateLikeITC ("while reading " ++ show s) s
 
 -- | Generate general equivalent positions by 4x4 matrix (unsafe version)
 fromHallSymbols' :: String -> [Matrix Rational]
@@ -151,7 +178,20 @@ fromHallSymbols' s = case fromHallSymbols s of
   Left e -> error $ show e
   Right mm -> mm
 
--- パーズした簡約記号からseiz matrixを復元します
+-- | Generate Generators by 4x4 matrix (unsafe version)
+fromHallSymbols'' :: String -> [Matrix Rational]
+fromHallSymbols'' s = case gg s of
+  Left e -> error $ show e
+  Right mm -> mm
+  where
+    gg s = parse generators ("while reading " ++ show s) s
+
+-- | Generate general equivalent positions by 4x4 matrix
+-- same as old version fromHallSymbols
+fromHallSymbols''' :: String -> Either ParseError [Matrix Rational]
+fromHallSymbols''' s = parse hallSymbols ("while reading " ++ show s) s
+
+-- パースした簡約記号からseiz matrixを復元します
 decodeSymbols :: ( LatticeSymbol, [MatrixSymbol], OriginShift ) -> [Matrix Rational]
 decodeSymbols = constructMatrices . restoreDefaultAxis
 
@@ -223,11 +263,11 @@ generate mm = gn 0 mm mm
 -- 注意点として、恒等操作が二つあるなどしただけで、計算結果が変化するようである。
 -- このため、計算に供する行列はジェネレーターの組み合わせとして正しいかどうか配慮する必要がある。
 gn :: Int -> [Matrix Rational] -> [Matrix Rational] -> [Matrix Rational]
-gn n s m | length m == length mm = m
+gn n s m | length (nub m) == length mm = mm
          -- 計算が収束しなかった場合、空の配列を返し終了する.
          -- 既存の空間群の対称操作の生成が最大4回の繰り返しで足りるので、なんとなくで10回にしています
          | n > 10 = []
-         | otherwise = gn (succ n) s mm
+         | otherwise = gn (succ n) (nub s) mm
   where
     mm = nub . map (modulus1 . foldl1 multStd) . sequenceA $ [s,m]
 
