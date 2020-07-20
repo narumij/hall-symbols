@@ -22,9 +22,11 @@ Symmetry operations generater of Hall Symbols
 module Crystallography.HallSymbols (
   fromHallSymbols,
   fromHallSymbols',
+  fromHallSymbols'',
   hallSymbols,
 --  hallSymbols',
   parser,
+  generators,
   LatticeSymbol,
   MatrixSymbol,
   OriginShift,
