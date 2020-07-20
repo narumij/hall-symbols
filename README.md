@@ -27,5 +27,5 @@ repl> prettyXYZ <$> fromHallSymbols'' "C -2yc"
 
 ## License
 
-See the [LICENSE](https://github.com/narumij/hall-symbols/blob/master/LICENSE)
+See the [LICENSE](https://raw.githubusercontent.com/narumij/hall-symbols/master/LICENSE)
 file in the repository.
