@@ -53,6 +53,8 @@ repl> fromHallSymbols' "C -2yc" >>= fromMatrix'
 
 ```
 
+Or use like below.
+
 ```haskell
 -- print Generators
 repl> prettyXYZ <$> generatorsOfHallSymbols "C -2yc"
