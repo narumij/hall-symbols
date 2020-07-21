@@ -15,8 +15,8 @@ Edit extra-deps part of stack.yaml like below.
 
 ```
 extra-deps:
-- matrix-as-xyz-0.1.1.1
-- symmetry-operations-symbols-0.0.1.3
+- matrix-as-xyz-0.1.1.3
+- symmetry-operations-symbols-0.0.1.2
 - hall-symbols-0.1.0.4
 ```
 
