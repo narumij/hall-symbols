@@ -8,7 +8,7 @@ copyright:           "Jun Narumi"
 
 extra-source-files:
 - README.md
-- ChangeLog.md
+#- ChangeLog.md
 
 # Metadata used when publishing your package
 synopsis:            Symmetry operations generater of Hall Symbols
@@ -21,8 +21,8 @@ description:         Please see the README on GitHub at <https://github.com/naru
 
 dependencies:
 - base >= 4.8 && < 5
-- matrix >= 0.3.5 && < 4
 - parsec >= 3.1 && < 4
+- matrix >= 0.3.5 && < 4
 
 library:
   source-dirs: src
