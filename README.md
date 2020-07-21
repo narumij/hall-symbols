@@ -20,10 +20,14 @@ extra-deps:
 - hall-symbols-0.1.0.4
 ```
 
-Build project.
+Edit dependencies part of package.yaml like below.
 
-```shell
-% stack build
+```
+dependencies:
+- base >= 4.7 && < 5
+- matrix-as-xyz
+- symmetry-operations-symbols
+- hall-symbols
 ```
 
 Then start repl.
@@ -35,9 +39,6 @@ Then start repl.
 Setup packages and load modules.
 
 ```haskell
-repl> :set -package matrix-as-xyz
-repl> :set -package symmetry-operations-symbols
-repl> :set -package hall-symbols
 repl> :m Data.Matrix.AsXYZ Data.Matrix.SymmetryOperationsSymbols Crystallography.HallSymbols
 ```
 

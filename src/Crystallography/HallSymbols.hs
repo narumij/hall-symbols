@@ -23,10 +23,9 @@ module Crystallography.HallSymbols (
   fromHallSymbols,
   fromHallSymbols',
   generatorsOfHallSymbols,
-  hallSymbols,
---  hallSymbols',
   parser,
   generators,
+  hallSymbols,
   LatticeSymbol,
   MatrixSymbol,
   OriginShift,
@@ -150,29 +149,9 @@ hallSymbols = do
       -- 正常に終了すると、一般座標の行列を返します。
       return equivalentPositions
 
--- | Parse and make General Positions.
-generateLikeITC :: CharParser () [Matrix Rational]
-generateLikeITC = do
-  raw <- parser
-  let equivalentPositions = likeITC raw
-  if null equivalentPositions
-    then
-      fail "something happen when decode or generate process."
-    else
-      -- 正常に終了すると、一般座標の行列を返します。
-      return equivalentPositions
-
-likeITC :: ( LatticeSymbol, [MatrixSymbol], OriginShift ) -> [Matrix Rational]
-likeITC raw = if null h then [] else r            
-  where
-    constructMatrices' (l,nat,v) = fmap (mapOriginShfit v) [lattice l, map matrix nat]
-    [a,b] = constructMatrices' . restoreDefaultAxis $ raw
-    h = generate $ [identity] ++ b
-    r = generate $ h ++ a
-
 -- | Generate general equivalent positions by 4x4 matrix
 fromHallSymbols :: String -> Either ParseError [Matrix Rational]
-fromHallSymbols s = parse generateLikeITC ("while reading " ++ show s) s
+fromHallSymbols s = parse hallSymbols ("while reading " ++ show s) s
 
 -- | Generate general equivalent positions by 4x4 matrix (unsafe version)
 fromHallSymbols' :: String -> [Matrix Rational]
@@ -187,11 +166,6 @@ generatorsOfHallSymbols s = case gg s of
   Right mm -> mm
   where
     gg s = parse generators ("while reading " ++ show s) s
-
--- | Generate general equivalent positions by 4x4 matrix
--- same as old version fromHallSymbols
-fromHallSymbols''' :: String -> Either ParseError [Matrix Rational]
-fromHallSymbols''' s = parse hallSymbols ("while reading " ++ show s) s
 
 -- パースした簡約記号からseiz matrixを復元します
 decodeSymbols :: ( LatticeSymbol, [MatrixSymbol], OriginShift ) -> [Matrix Rational]
