@@ -23,6 +23,7 @@ dependencies:
 - base >= 4.8 && < 5
 - parsec >= 3.1 && < 4
 - matrix >= 0.3.5 && < 4
+# - matrix-as-xyz >=0.1 && <1
 
 library:
   source-dirs: src
@@ -38,9 +39,9 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hall-symbols
+    - matrix-as-xyz >=0.1 && <1
     - hspec
     - QuickCheck
-    - matrix-as-xyz
 
   doctest:
     main:                test/doctests.hs
@@ -50,6 +51,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hall-symbols
-    - matrix-as-xyz
     - doctest
-#    - doctest-discover
