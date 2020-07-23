@@ -52,3 +52,4 @@ tests:
     dependencies:
     - hall-symbols
     - doctest
+#    - doctest-discover
