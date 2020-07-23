@@ -11,13 +11,10 @@ Make new stack project and move to project directory.
 % cd hmRepl
 ```
 
-Edit extra-deps part of stack.yaml like below.
-
+Edit resolver part like below
 ```
-extra-deps:
-- matrix-as-xyz-0.1.1.3
-- symmetry-operations-symbols-0.0.1.2
-- hall-symbols-0.1.0.6
+# resolver: lts-16.6
+resolver: nightly-2020-07-23
 ```
 
 Edit dependencies part of package.yaml like below.
