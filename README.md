@@ -1,5 +1,9 @@
 # hall-symbols
 
+[![Continuous Integration status][status-png]][status]
+[![Hackage page (downloads and API reference)][hackage-png]][hackage]
+[![Hackage-Deps][hackage-deps-png]][hackage-deps]
+
 Haskell Hall Symbols Library
 
 ## Quickstart
@@ -76,3 +80,11 @@ repl> generatorsOfHallSymbols "C -2yc" >>= fromMatrix'
 
 See the [LICENSE](https://raw.githubusercontent.com/narumij/hall-symbols/master/LICENSE)
 file in the repository.
+
+ [hackage]: http://hackage.haskell.org/package/hall-symbols
+ [hackage-png]: http://img.shields.io/hackage/v/hall-symbols.svg
+ [hackage-deps]: http://packdeps.haskellers.com/reverse/hall-symbols
+ [hackage-deps-png]: https://img.shields.io/hackage-deps/v/hall-symbols.svg
+
+ [status]: http://travis-ci.org/narumij/hall-symbols?branch=master
+ [status-png]: https://api.travis-ci.org/narumij/hall-symbols.svg?branch=master
