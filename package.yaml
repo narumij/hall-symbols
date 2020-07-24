@@ -39,7 +39,7 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hall-symbols
-    - matrix-as-xyz >=1.1 && <0.2
+    - matrix-as-xyz >=0.1 && <0.2
     - hspec
     - QuickCheck
 
