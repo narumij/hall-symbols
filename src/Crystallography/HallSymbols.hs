@@ -29,6 +29,7 @@ module Crystallography.HallSymbols (
   LatticeSymbol,
   MatrixSymbol,
   OriginShift,
+  multSymop,
   ) where
 
 import Data.Maybe
@@ -388,3 +389,5 @@ tbl345 2 (Just '"')  (Just 'z') = fromLists [[ 0, 1, 0, 0], [ 1, 0, 0, 0], [ 0, 
 tbl345 3 (Just '*')   _         = fromLists [[ 0, 0, 1, 0], [ 1, 0, 0, 0], [ 0, 1, 0, 0], [ 0, 0, 0, 1]]
 -- error
 tbl345 a b            c         = error $ show (a,b,c)
+
+multSymop n m = map (modulus1 . foldl1 multStd) . sequenceA $ [[n],m]

@@ -18,6 +18,7 @@ Spacegroup Symbols
 -}
 module Crystallography.HallSymbols.SpacegroupSymbols (
   spacegroupSymbols,
+  fromNumberAndChoice,
   NumberAndChoice,
   HMFull,
   HallName
@@ -26,6 +27,11 @@ module Crystallography.HallSymbols.SpacegroupSymbols (
 type NumberAndChoice = String
 type HMFull = String
 type HallName = String
+
+fromNumberAndChoice :: NumberAndChoice -> Maybe HallName
+fromNumberAndChoice numberAndChoice = lookup numberAndChoice hallNames
+  where
+    hallNames = map (\(a,b,c) -> (a,c)) spacegroupSymbols
 
 -- | Table 6. Concise space-group symbols
 spacegroupSymbols :: [(NumberAndChoice,HMFull,HallName)]
