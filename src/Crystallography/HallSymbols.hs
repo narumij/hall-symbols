@@ -391,3 +391,4 @@ tbl345 3 (Just '*')   _         = fromLists [[ 0, 0, 1, 0], [ 1, 0, 0, 0], [ 0, 
 tbl345 a b            c         = error $ show (a,b,c)
 
 multSymop n m = map (modulus1 . foldl1 multStd) . sequenceA $ [[n],m]
+
