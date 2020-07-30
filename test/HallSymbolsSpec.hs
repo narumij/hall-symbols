@@ -107,7 +107,7 @@ spec = do
       evaluate (fromHallSymbols' "PP") `shouldThrow` anyException
 
   describe "unique" $ do
-    testUniqueAll
+--    testUniqueAll
     testUniqueAll' 527
     mapM_ testUnique $ filter (/= 68) [1..230]
     mapM_ (uncurry testUnique') $ [(68,9)]
@@ -119,13 +119,13 @@ testUniqueAll' c = do
        (length . uniqueSpacegroups $ allNumberAndChoice) `shouldBe` c
 
 testUnique n = do
-     it ("unique no." ++ (show n)) $ do
+     it ("no." ++ (show n) ++ " uniques = " ++ (show $ length numberAndChoices)) $ do
        (length . uniqueSpacegroups $ numberAndChoices) `shouldBe` (length numberAndChoices)
   where
     numberAndChoices = filter' n $ allNumberAndChoice
 
 testUnique' n c = do
-     it ("unique no." ++ (show n)) $ do
+     it ("no." ++ (show n) ++ " uniques = " ++ (show c) ++ " (total: " ++ (show $ length numberAndChoices) ++ ")") $ do
        (length . uniqueSpacegroups $ numberAndChoices) `shouldBe` c
   where
     numberAndChoices = filter' n $ allNumberAndChoice
