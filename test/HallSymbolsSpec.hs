@@ -107,7 +107,6 @@ spec = do
       evaluate (fromHallSymbols' "PP") `shouldThrow` anyException
 
   describe "unique" $ do
---    testUniqueAll
     testUniqueAll' 527
     mapM_ testUnique $ filter (/= 68) [1..230]
     mapM_ (uncurry testUnique') $ [(68,9)]
