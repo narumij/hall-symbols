@@ -3,13 +3,12 @@ module HallSymbolsSpec where
 import Test.Hspec
 
 import Control.Exception (evaluate)
-import Text.ParserCombinators.Parsec
 import Crystallography.HallSymbols
 import Crystallography.HallSymbols.SpacegroupSymbols (NumberAndChoice,HallName,spacegroupSymbols)
-import Data.List
-import Data.Matrix
-import Data.Matrix.AsXYZ
-import Data.List.Split
+import Data.List (sort,nub)
+import Data.Matrix (Matrix,toList,zero,identity)
+import Data.Matrix.AsXYZ (fromXYZ)
+import Data.List.Split (splitOn)
 import Data.Maybe (fromJust)
 
 -- for check about equivalent
