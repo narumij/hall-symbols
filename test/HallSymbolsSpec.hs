@@ -5,9 +5,12 @@ import Test.Hspec
 import Control.Exception (evaluate)
 import Text.ParserCombinators.Parsec
 import Crystallography.HallSymbols
+import Crystallography.HallSymbols.SpacegroupSymbols (NumberAndChoice,HallName,spacegroupSymbols)
 import Data.List
 import Data.Matrix
 import Data.Matrix.AsXYZ
+import Data.List.Split
+import Data.Maybe (fromJust)
 
 -- for check about equivalent
 sort' :: Ord a => [Matrix a] -> [[a]]
@@ -15,6 +18,7 @@ sort' xs = sort . map toList $ xs
 
 spec :: Spec
 spec = do
+
 
   describe "sort'" $ do
 
@@ -101,3 +105,51 @@ spec = do
 
     it "throws an exception if used with an wrong string" $ do
       evaluate (fromHallSymbols' "PP") `shouldThrow` anyException
+
+  describe "unique" $ do
+    testUniqueAll
+    testUniqueAll' 527
+    mapM_ testUnique $ filter (/= 68) [1..230]
+    mapM_ (uncurry testUnique') $ [(68,9)]
+
+testUniqueAll = testUniqueAll' (length allNumberAndChoice)
+
+testUniqueAll' c = do
+     it ("unique count ==" ++ show c) $ do
+       (length . uniqueSpacegroups $ allNumberAndChoice) `shouldBe` c
+
+testUnique n = do
+     it ("unique no." ++ (show n)) $ do
+       (length . uniqueSpacegroups $ numberAndChoices) `shouldBe` (length numberAndChoices)
+  where
+    numberAndChoices = filter' n $ allNumberAndChoice
+
+testUnique' n c = do
+     it ("unique no." ++ (show n)) $ do
+       (length . uniqueSpacegroups $ numberAndChoices) `shouldBe` c
+  where
+    numberAndChoices = filter' n $ allNumberAndChoice
+
+fromNumberAndChoice :: NumberAndChoice -> Maybe HallName
+fromNumberAndChoice numberAndChoice = lookup numberAndChoice hallNames
+  where
+    hallNames = map (\(a,b,c) -> (a,c)) spacegroupSymbols
+
+lhs :: NumberAndChoice -> [[Rational]]
+lhs s = sort' $ fromHallSymbols' (fromJust . fromNumberAndChoice $ s)
+
+-- rhs :: NumberAndChoice -> [[Rational]]
+-- rhs = sort' . concat . symmetryOperations
+
+allNumberAndChoice :: [String]
+allNumberAndChoice = map (\(a,b,d) -> a) spacegroupSymbols
+
+uniqueSpacegroups :: [NumberAndChoice] -> [[[Rational]]]
+uniqueSpacegroups mm = nub $ map lhs mm
+
+filter' :: Int -> [String] -> [String]
+filter' i = filter (\a -> (head . splitOn ":" $ a) == s)
+  where
+    s = show i
+
+
