@@ -138,9 +138,6 @@ fromNumberAndChoice numberAndChoice = lookup numberAndChoice hallNames
 lhs :: NumberAndChoice -> [[Rational]]
 lhs s = sort' $ fromHallSymbols' (fromJust . fromNumberAndChoice $ s)
 
--- rhs :: NumberAndChoice -> [[Rational]]
--- rhs = sort' . concat . symmetryOperations
-
 allNumberAndChoice :: [String]
 allNumberAndChoice = map (\(a,b,d) -> a) spacegroupSymbols
 
