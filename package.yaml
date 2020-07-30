@@ -1,5 +1,5 @@
 name:                hall-symbols
-version:             0.1.0.6
+version:             0.1.0.7
 github:              "narumij/hall-symbols"
 license:             BSD3
 author:              "Jun Narumi"
@@ -26,6 +26,9 @@ dependencies:
 - matrix-as-xyz >=0.1 && <0.2
 - hspec
 - split
+- QuickCheck
+- doctest
+# - doctest-discover
 
 library:
   source-dirs: src
@@ -41,9 +44,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hall-symbols
-#    - matrix-as-xyz >=0.1 && <0.2
-#    - hspec
-    - QuickCheck
 
   doctest:
     main:                test/doctests.hs
@@ -53,5 +53,3 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - hall-symbols
-    - doctest
-#    - doctest-discover
