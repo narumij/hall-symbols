@@ -15,20 +15,20 @@ Make new stack project and move to project directory.
 % cd hmRepl
 ```
 
-Edit resolver part like below
+Edit your stack.yaml and set the following:
+
 ```
-# resolver: lts-16.6
-resolver: nightly-2020-07-23
+resolver: lts-16.8
 ```
 
-Edit dependencies part of package.yaml like below.
+Edit your package.yaml and set the following:
 
 ```
 dependencies:
-- base >= 4.7 && < 5
+- base >= 4.8 && < 5
+- hall-symbols
 - matrix-as-xyz
 - symmetry-operations-symbols
-- hall-symbols
 ```
 
 Then start repl.
@@ -37,7 +37,7 @@ Then start repl.
 % stack repl
 ```
 
-Setup packages and load modules.
+Load modules.
 
 ```haskell
 repl> :m Data.Matrix.AsXYZ Data.Matrix.SymmetryOperationsSymbols Crystallography.HallSymbols

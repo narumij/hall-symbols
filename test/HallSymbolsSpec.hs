@@ -19,7 +19,7 @@ spec :: Spec
 spec = do
 
 
-  describe "sort'" $ do
+  describe "sort' function check" $ do
 
     it "empty list is not equivalent with a 0 matrix." $ do
       sort' [] `shouldNotBe` (sort' [zero 4 4])
@@ -105,7 +105,7 @@ spec = do
     it "throws an exception if used with an wrong string" $ do
       evaluate (fromHallSymbols' "PP") `shouldThrow` anyException
 
-  describe "unique" $ do
+  describe "Unique count test" $ do
     testUniqueAll' 527
     mapM_ testUnique $ filter (/= 68) [1..230]
     mapM_ (uncurry testUnique') $ [(68,9)]
@@ -113,7 +113,7 @@ spec = do
 testUniqueAll = testUniqueAll' (length allNumberAndChoice)
 
 testUniqueAll' c = do
-     it ("unique count ==" ++ show c) $ do
+     it ("total unique count == " ++ show c) $ do
        (length . uniqueSpacegroups $ allNumberAndChoice) `shouldBe` c
 
 testUnique n = do
